@@ -4,14 +4,9 @@ import com.back._1cafe.product.Product;
 import jakarta.persistence.*;
 import lombok.Getter;
 
-import jakarta.persistence.*;
-import lombok.Getter;
-import lombok.Setter;
-
-@Getter
-@Setter
 @Entity
 @Table(name = "order_items")
+@Getter
 public class OrderItem {
 
     @Id
@@ -29,4 +24,9 @@ public class OrderItem {
     @Column(nullable = false)
     private int quantity;
 
+    public OrderItem(Order order, Product product, int quantity) {
+        this.order = order;
+        this.product = product;
+        this.quantity = quantity;
+    }
 }

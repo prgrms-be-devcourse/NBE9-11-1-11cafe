@@ -1,8 +1,9 @@
 package com.back._1cafe.cart;
 
 import jakarta.persistence.*;
+import lombok.AccessLevel;
 import lombok.Getter;
-import lombok.Setter;
+import lombok.NoArgsConstructor;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -10,6 +11,7 @@ import java.util.List;
 @Entity
 @Table(name = "cart")
 @Getter
+@NoArgsConstructor(access = AccessLevel.PROTECTED)
 public class Cart {
 
     @Id
@@ -23,4 +25,7 @@ public class Cart {
             , orphanRemoval = true)
     private List<CartItem> cartItemList = new ArrayList<>();
 
+    public Cart(String guestId) {
+        this.guestId = guestId;
+    }
 }

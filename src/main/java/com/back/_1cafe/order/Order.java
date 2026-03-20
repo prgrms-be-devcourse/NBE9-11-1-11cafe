@@ -30,7 +30,19 @@ public class Order {
     @CreatedDate
     private LocalDateTime createdAt;
 
+    @Column(nullable = false)
+    private Integer totalAmount;
+
     @OneToMany(mappedBy = "order", cascade = {CascadeType.PERSIST, CascadeType.REMOVE}
             , orphanRemoval = true)
     private List<OrderItem> orderItemList = new ArrayList<>();
+
+    protected Order() {
+    }
+
+    public Order(Customer customer, Integer deliveryBatch, Integer totalAmount) {
+        this.customer = customer;
+        this.deliveryBatch = deliveryBatch;
+        this.totalAmount = totalAmount;
+    }
 }

@@ -27,7 +27,4 @@ public class Product {
     @Column(nullable = false, updatable = false)
     @CreatedDate
     private LocalDateTime createAt;
-
-
-
 }
