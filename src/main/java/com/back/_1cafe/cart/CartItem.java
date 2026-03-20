@@ -1,0 +1,25 @@
+package com.back._1cafe.cart;
+
+import com.back._1cafe.product.Product;
+import jakarta.persistence.*;
+
+@Entity
+@Table(name = "cart_items")
+public class CartItem {
+
+    @Id
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
+    private int cartItemId;
+
+    @ManyToOne(fetch = FetchType.LAZY)
+    @JoinColumn(name = "cart_id", nullable = false)
+    private Cart cart;
+
+    @ManyToOne(fetch = FetchType.LAZY)
+    @JoinColumn(name = "product_id", nullable = false)
+    private Product product;
+
+    @Column(nullable = false)
+    private int quantity;
+
+}
