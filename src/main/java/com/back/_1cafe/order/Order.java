@@ -29,6 +29,6 @@ public class Order {
     private LocalDateTime createdAt = LocalDateTime.now();
 
     @OneToMany(mappedBy = "order", cascade = {CascadeType.PERSIST, CascadeType.REMOVE}
-            , orphanRemoval = true, fetch = FetchType.LAZY)
+            , orphanRemoval = true)
     private List<OrderItem> orderItemList = new ArrayList<>();
 }
