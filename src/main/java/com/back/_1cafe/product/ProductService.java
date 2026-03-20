@@ -4,6 +4,7 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
+import java.util.Optional;
 
 @Service
 @RequiredArgsConstructor
@@ -14,5 +15,10 @@ public class ProductService {
     //전체 조회
     public List<Product> getAllProducts(){
         return productRepository.findAll();
+    }
+
+    //상세보기
+    public Optional<Product> getProduct(int postId){
+        return productRepository.findById(postId);
     }
 }
