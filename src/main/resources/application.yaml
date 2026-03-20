@@ -1,3 +1,14 @@
 spring:
-  application:
-    name: 11cafe
+  profiles:
+    active: dev # 기본: dev
+  output:
+    ansi:
+      enabled: always
+  jpa:
+    show-sql: true
+    hibernate:
+      ddl-auto: update
+    properties:
+      hibernate:
+        format_sql: true
+        highlight_sql: true
