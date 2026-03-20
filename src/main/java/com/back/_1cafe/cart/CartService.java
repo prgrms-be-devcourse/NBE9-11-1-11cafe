@@ -6,6 +6,7 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+
 import java.util.List;
 
 @Service
@@ -14,6 +15,36 @@ import java.util.List;
 public class CartService {
     private final CartRepository cartRepository;
     private final ProductRepository productRepository;
+
+    public CartDto getCart(String guestId) {
+
+        Cart cart = cartRepository.findByGuestId(guestId)
+                .orElseThrow(() -> new RuntimeException("장바구니가 없습니다.")); // 비어있을 시 500 에러.
+
+
+        List<CartDto.CartItemDto> items = cart.getCartItemList().stream()
+                .map(item -> new CartDto.CartItemDto(
+                        item.getCartItemId(),
+                        item.getProduct().getProductId(),
+                        item.getProduct().getProductName(),
+                        item.getProduct().getPrice(),
+                        item.getQuantity(),
+                        item.getProduct().getPrice() * item.getQuantity()
+                ))
+                .toList();
+
+        int totalAmount = items.stream()
+                .mapToInt(CartDto.CartItemDto::itemTotal)
+                .sum();
+
+        return new CartDto(
+                cart.getCartId(),
+                cart.getGuestId(),
+                items,
+                totalAmount
+        );
+    }
+
     //장바구니에 상품 추가
     @Transactional
     public CartDto addProduct(String guestId, CartDto.Request request) {
@@ -36,7 +67,6 @@ public class CartService {
                 );
         return convertToDto(cart);
     }
-
 
     //엔티티 및 DTO 매핑
     private CartDto convertToDto(Cart cart) {
