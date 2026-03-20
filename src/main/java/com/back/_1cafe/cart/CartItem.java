@@ -32,7 +32,6 @@ public class CartItem {
         this.product = product;
         this.quantity = quantity;
     }
-
     //수량 변경(누적)
     public void addQuantity(int quantity) {
         this.quantity += quantity;

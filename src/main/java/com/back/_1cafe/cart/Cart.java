@@ -28,6 +28,8 @@ public class Cart {
     public Cart(String guestId){
         this.guestId=guestId;
     }
+
+    //전체 가격 조회 로직
     public int getTotalAmount() {
         return cartItemList.stream()
                 .mapToInt(item -> item.getProduct().getPrice() * item.getQuantity())
