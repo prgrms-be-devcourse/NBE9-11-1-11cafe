@@ -4,24 +4,22 @@ import jakarta.persistence.*;
 import lombok.Getter;
 import lombok.Setter;
 
-import java.time.LocalDateTime;
-
 @Getter
 @Setter
 @Entity
 @Table(name = "order_items")
-public class Order {
+public class OrderItem {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
+    private Integer orderItemId;
+
+    @Column(nullable = false)
     private Integer orderId;
 
     @Column(nullable = false)
-    private Integer customerId;
+    private Integer productId;
 
     @Column(nullable = false)
-    private Integer deliveryBatch;
-
-    @Column(nullable = false)
-    private LocalDateTime createdAt;
+    private Integer quantity;
 }
