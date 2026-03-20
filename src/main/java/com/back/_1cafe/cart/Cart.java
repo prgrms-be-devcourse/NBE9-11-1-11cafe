@@ -10,7 +10,6 @@ import java.util.List;
 @Entity
 @Table(name = "cart")
 @Getter
-@Setter
 public class Cart {
 
     @Id

@@ -3,11 +3,9 @@ package com.back._1cafe.order;
 import com.back._1cafe.product.Product;
 import jakarta.persistence.*;
 import lombok.Getter;
-import lombok.Setter;
 
 @Entity
 @Table(name = "order_items")
-@Setter
 @Getter
 public class OrderItem {
 

@@ -1,11 +1,14 @@
 package com.back._1cafe.product;
 
 import jakarta.persistence.*;
+import org.springframework.data.annotation.CreatedDate;
+import org.springframework.data.jpa.domain.support.AuditingEntityListener;
 
 import java.time.LocalDateTime;
 
 @Entity
 @Table(name = "products")
+@EntityListeners(AuditingEntityListener.class)
 public class Product {
 
     @Id
@@ -22,7 +25,8 @@ public class Product {
     private String description;
 
     @Column(nullable = false, updatable = false)
-    private LocalDateTime createAt = LocalDateTime.now();
+    @CreatedDate
+    private LocalDateTime createAt;
 
 
 
