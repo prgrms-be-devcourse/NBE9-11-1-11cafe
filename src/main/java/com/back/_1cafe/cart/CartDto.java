@@ -1,5 +1,8 @@
 package com.back._1cafe.cart;
 
+import jakarta.validation.constraints.Min;
+import jakarta.validation.constraints.NotNull;
+
 import java.util.List;
 
 // 응답 데이터 전체를 담는 레코드
@@ -11,7 +14,10 @@ public record CartDto(
 ) {
     // 요청 데이터를 받기 위한 내부 레코드
     public record Request(
+            @NotNull(message = "상품 ID는 필수입니다.")
             int productId,
+            @NotNull(message = "수량을 입력해주세요")
+            @Min(value = 1, message = "수량은 1개 이상이여 합니다.")
             int quantity
     ) {}
 
