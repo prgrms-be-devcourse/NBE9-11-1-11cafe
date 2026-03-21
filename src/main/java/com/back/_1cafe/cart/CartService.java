@@ -1,5 +1,7 @@
 package com.back._1cafe.cart;
 
+import com.back._1cafe.product.Product;
+import com.back._1cafe.product.ProductRepository;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -12,6 +14,7 @@ import java.util.List;
 @Transactional
 public class CartService {
     private final CartRepository cartRepository;
+    private final ProductRepository productRepository;
 
     public CartDto getCart(String guestId) {
 
@@ -42,12 +45,8 @@ public class CartService {
         );
     }
 
-    //Todo->상품쪽 개발 완료시 가능
-//     private final ProductRepository productRepository;
-
     //장바구니에 상품 추가
-    //Todo 상품 개발 완료시 진행
-    /*@Transactional
+    @Transactional
     public CartDto addProduct(String guestId, CartDto.Request request) {
         // 1. 장바구니 찾기 (없으면 생성)
         Cart cart = cartRepository.findByGuestId(guestId)
@@ -67,7 +66,7 @@ public class CartService {
                         () -> cart.getCartItemList().add(new CartItem(cart, product, request.quantity()))
                 );
         return convertToDto(cart);
-    }*/
+    }
 
     //엔티티 및 DTO 매핑
     private CartDto convertToDto(Cart cart) {
