@@ -2,12 +2,13 @@ package com.back._1cafe.cart;
 
 import com.back._1cafe.product.Product;
 import jakarta.persistence.*;
+import lombok.AccessLevel;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 
 @Entity
 @Getter
-@NoArgsConstructor
+@NoArgsConstructor(access = AccessLevel.PROTECTED)
 @Table(name = "cart_items")
 public class CartItem {
 
