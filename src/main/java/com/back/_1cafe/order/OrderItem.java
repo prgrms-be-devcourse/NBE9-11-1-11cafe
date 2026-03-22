@@ -24,9 +24,4 @@ public class OrderItem {
     @Column(nullable = false)
     private int quantity;
 
-    public OrderItem(Order order, Product product, int quantity) {
-        this.order = order;
-        this.product = product;
-        this.quantity = quantity;
-    }
 }
