@@ -19,7 +19,7 @@ public class CartService {
     public CartDto getCart(String guestId) {
 
         Cart cart = cartRepository.findByGuestId(guestId)
-                .orElseThrow(() -> new RuntimeException("장바구니가 없습니다.")); // 비어있을 시 500 에러.
+                .orElseThrow(() -> new IllegalArgumentException("장바구니가 없습니다.")); // 비어있을 시 500 에러.
         List<CartDto.CartItemDto> items = cart.getCartItemList().stream()
                 .map(item -> new CartDto.CartItemDto(
                         item.getCartItemId(),
