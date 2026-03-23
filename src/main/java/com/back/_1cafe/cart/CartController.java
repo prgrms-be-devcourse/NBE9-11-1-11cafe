@@ -38,6 +38,18 @@ public class CartController {
             @Valid @RequestBody CartDto.UpdateQuantityReq req
     ){
         CartDto rst = cartService.modifyProduct(guestId,productId,req.quantity());
+        return RsData.of("장바구니 수정 성공", rst);
+    }
+
+
+    //장바구니 상품 수량변경
+    @PutMapping("/products/{productId}")
+    public RsData<CartDto> modifyProduct(
+            @RequestHeader("X-Guest-Id") String guestId,
+            @PathVariable Integer productId,
+            @Valid @RequestBody CartDto.UpdateQuantityReq req
+    ){
+        CartDto rst = cartService.modifyProduct(guestId,productId,req.quantity());
         return RsData.of("장바구니 수정 성공.", rst);
     }
 
