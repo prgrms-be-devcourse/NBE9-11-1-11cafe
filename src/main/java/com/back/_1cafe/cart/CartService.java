@@ -67,6 +67,9 @@ public class CartService {
         return convertToDto(cart);
     }
 
+    public long count() {
+        return cartRepository.count();
+    }
 
     //엔티티 및 DTO 매핑
     private CartDto convertToDto(Cart cart) {
