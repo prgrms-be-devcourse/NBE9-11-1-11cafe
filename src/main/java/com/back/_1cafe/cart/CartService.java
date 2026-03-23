@@ -14,12 +14,12 @@ import java.util.List;
 public class CartService {
     private final CartRepository cartRepository;
     private final ProductRepository productRepository;
+    private final CartItemRepository cartItemRepository;
 
     public CartDto getCart(String guestId) {
 
         Cart cart = cartRepository.findByGuestId(guestId)
-                .orElseThrow(() -> new RuntimeException("장바구니가 없습니다.")); // 비어있을 시 500 에러.
-
+                .orElseThrow(() -> new IllegalArgumentException("장바구니가 없습니다.")); // 비어있을 시 500 에러.
         List<CartDto.CartItemDto> items = cart.getCartItemList().stream()
                 .map(item -> new CartDto.CartItemDto(
                         item.getCartItemId(),
@@ -86,6 +86,19 @@ public class CartService {
         return convertToDto(cart);
     }
 
+    //삭제구현
+    @Transactional
+    public CartDto deleteProduct(String guestId, Integer productId) {
+        Cart cart = cartRepository.findByGuestId(guestId).
+                orElseThrow(()->new IllegalArgumentException("장바구니가 존재하지않습니다."));
+        CartItem targetItem=cart.getCartItemList().stream()
+                .filter(item->item.getProduct().getProductId()==productId)
+                .findFirst().orElseThrow(()->new IllegalArgumentException("장바구니에 해당 상품이 존재하지 않습니다."));
+        cart.getCartItemList().remove(targetItem);
+        return convertToDto(cart);
+    }
+
+
     //엔티티 및 DTO 매핑
     private CartDto convertToDto(Cart cart) {
         List<CartDto.CartItemDto> itemDtos = cart.getCartItemList().stream()
@@ -105,4 +118,6 @@ public class CartService {
                 cart.getTotalAmount()
         );
     }
+
+
 }
