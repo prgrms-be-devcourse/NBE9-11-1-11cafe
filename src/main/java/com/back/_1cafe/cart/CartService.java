@@ -10,7 +10,7 @@ import java.util.List;
 
 @Service
 @RequiredArgsConstructor
-@Transactional
+@Transactional(readOnly = true)
 public class CartService {
     private final CartRepository cartRepository;
     private final ProductRepository productRepository;
@@ -19,7 +19,6 @@ public class CartService {
 
         Cart cart = cartRepository.findByGuestId(guestId)
                 .orElseThrow(() -> new RuntimeException("장바구니가 없습니다.")); // 비어있을 시 500 에러.
-
 
         List<CartDto.CartItemDto> items = cart.getCartItemList().stream()
                 .map(item -> new CartDto.CartItemDto(
@@ -69,6 +68,22 @@ public class CartService {
 
     public long count() {
         return cartRepository.count();
+    }
+
+    @Transactional
+    public CartDto modifyProduct(String guestId, Integer productId, Integer quantity){
+        //장바구니 찾기 없을시 예외발생
+        Cart cart = cartRepository.findByGuestId(guestId)
+                .orElseThrow(()->new IllegalArgumentException("장바구니가 존재하지않습니다."));
+        //상품존재확인(없으면 예외발생)
+        CartItem targetItem=cart.getCartItemList().stream()
+                .filter(item->item.getProduct().getProductId()==productId)
+                .findFirst()
+                .orElseThrow(()->new IllegalArgumentException("장바구니에 해당 상품이 존재하지 않습니다."));
+        //갯수 수정
+        targetItem.modifyQuantity(quantity);
+        //Dto리턴
+        return convertToDto(cart);
     }
 
     //엔티티 및 DTO 매핑
