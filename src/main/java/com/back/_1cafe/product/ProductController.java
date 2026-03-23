@@ -28,8 +28,9 @@ public class ProductController {
     }
 
     @GetMapping("/{id}")
-    public RsData<ProductDto> detail(@PathVariable("id") int postId){
-        Product product = productService.getProduct(postId).get();
+    public RsData<ProductDto> detail(@PathVariable("id") int productId){
+        Product product = productService.getProduct(productId)
+                .orElseThrow(() -> new IllegalArgumentException("상품을 찾을 수 없습니다. id: " + productId));
         return new RsData<>(true, "상품 조회 성공", new ProductDto(product));
     }
 }
