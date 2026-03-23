@@ -36,6 +36,7 @@ public class BaseInitData implements ApplicationRunner {
     @Transactional
     public void work1() {
         if (cartService.count() > 0) {
+            System.out.println("이미 존재함.");
             return;
         }
 

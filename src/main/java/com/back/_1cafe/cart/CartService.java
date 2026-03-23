@@ -19,7 +19,8 @@ public class CartService {
     public CartDto getCart(String guestId) {
 
         Cart cart = cartRepository.findByGuestId(guestId)
-                .orElseThrow(() -> new IllegalArgumentException("장바구니가 없습니다.")); // 비어있을 시 500 에러.
+                .orElseThrow(() -> new IllegalArgumentException("장바구니가 없습니다."));
+
         List<CartDto.CartItemDto> items = cart.getCartItemList().stream()
                 .map(item -> new CartDto.CartItemDto(
                         item.getCartItemId(),
@@ -86,6 +87,17 @@ public class CartService {
         return convertToDto(cart);
     }
 
+    @Transactional
+    public CartDto clearCart(String guestId) {
+        Cart cart = cartRepository.findByGuestId(guestId)
+                .orElseThrow(() -> new IllegalArgumentException("장바구니가 없습니다."));
+
+        // 장바구니 전체가 아닌 아이템만 제거.
+        cart.getCartItemList().clear();
+
+        return convertToDto(cart);
+    }
+
     //삭제구현
     @Transactional
     public CartDto deleteProduct(String guestId, Integer productId) {
@@ -97,7 +109,6 @@ public class CartService {
         cart.getCartItemList().remove(targetItem);
         return convertToDto(cart);
     }
-
 
     //엔티티 및 DTO 매핑
     private CartDto convertToDto(Cart cart) {
@@ -118,6 +129,4 @@ public class CartService {
                 cart.getTotalAmount()
         );
     }
-
-
 }
