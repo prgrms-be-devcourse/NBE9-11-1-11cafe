@@ -1,5 +1,8 @@
 package com.back._1cafe.global.exception;
 
+import com.back._1cafe.global.exception.customExcetpion.CartItemNotFoundException;
+import com.back._1cafe.global.exception.customExcetpion.CartNotFoundException;
+import com.back._1cafe.global.exception.customExcetpion.ProductNotFoundException;
 import com.back._1cafe.global.rsData.RsData;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -33,8 +36,31 @@ public class GlobalExceptionHandler {
                 .status(HttpStatus.BAD_REQUEST)
                 .body(rsData);
     }
+    //존재하지 않는 장바구니 요청처리
+    @ExceptionHandler(CartNotFoundException.class)
+    public ResponseEntity<RsData<Void>> handleCartNotFoundException(CartNotFoundException e) {
+        return ResponseEntity
+                .status(HttpStatus.NOT_FOUND)
+                .body(RsData.fail(e.getMessage()));
+    }
+    // 상품 없음 예외 처리
+    @ExceptionHandler(ProductNotFoundException.class)
+    public ResponseEntity<RsData<Void>> handleProductNotFoundException(ProductNotFoundException e) {
+        return ResponseEntity
+                .status(HttpStatus.NOT_FOUND)
+                .body(RsData.fail(e.getMessage()));
+    }
 
-    // 존재하지 않는 상품 요청 처리
+    //존재하지않는 장바구니 아이템
+    @ExceptionHandler(CartItemNotFoundException.class)
+    public ResponseEntity<RsData<Void>> handleCartItemNotFoundException(CartItemNotFoundException e) {
+        return ResponseEntity
+                .status(HttpStatus.NOT_FOUND)
+                .body(RsData.fail(e.getMessage()));
+    }
+
+
+    //잘못된 인자 처리 유지
     @ExceptionHandler(IllegalArgumentException.class)
     public ResponseEntity<RsData<Void>> handleIllegalArgumentException(IllegalArgumentException e) {
         RsData<Void> rsData = RsData.fail(e.getMessage());
