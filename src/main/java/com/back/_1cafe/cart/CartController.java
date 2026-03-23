@@ -20,6 +20,7 @@ public class CartController {
         CartDto rst = cartService.getCart(guestId);
         return RsData.of("장바구니 조회 성공", rst);
     }
+
     //카트에 상품추가
     @PostMapping
     public RsData<CartDto> addProduct(
@@ -41,4 +42,19 @@ public class CartController {
         return RsData.of("장바구니 수정 성공", rst);
     }
 
+    @Operation(summary = "장바구니 전체 삭제")
+    @DeleteMapping("")
+    public RsData<CartDto> deleteAllCart(
+            @RequestHeader("X-Guest-Id") String guestId
+    ) {
+        CartDto cart = cartService.getCart(guestId);
+
+        if (cart.cartItems().isEmpty()) {
+            return RsData.fail("이미 장바구니가 비워져 있습니다.");
+        }
+
+        CartDto rst = cartService.clearCart(guestId);
+
+        return RsData.of("장바구니가 비워졌습니다.", rst);
+    }
 }

@@ -34,8 +34,8 @@ public record CartDto(
     ) {}
 
     public record UpdateQuantityReq(
-      @NotNull(message = "변경할 수량은 필수입니다.")
-      @Min(value = 1,message = "수량은 1이상이여야 합니다.")
-      Integer quantity
+            @NotNull(message = "변경할 수량은 필수입니다.")
+            @Min(value = 1,message = "수량은 1이상이여야 합니다.")
+            Integer quantity
     ){}
 }

@@ -14,6 +14,7 @@ import java.util.List;
 public class CartService {
     private final CartRepository cartRepository;
     private final ProductRepository productRepository;
+    private final CartItemRepository cartItemRepository;
 
     public CartDto getCart(String guestId) {
 
@@ -83,6 +84,17 @@ public class CartService {
         //갯수 수정
         targetItem.modifyQuantity(quantity);
         //Dto리턴
+        return convertToDto(cart);
+    }
+
+    @Transactional
+    public CartDto clearCart(String guestId) {
+        Cart cart = cartRepository.findByGuestId(guestId)
+                .orElseThrow(() -> new IllegalArgumentException("장바구니가 없습니다."));
+
+        // 장바구니 전체가 아닌 아이템만 제거.
+        cart.getCartItemList().clear();
+
         return convertToDto(cart);
     }
 
