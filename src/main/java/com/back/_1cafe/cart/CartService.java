@@ -14,6 +14,7 @@ import java.util.List;
 public class CartService {
     private final CartRepository cartRepository;
     private final ProductRepository productRepository;
+    private final CartItemRepository cartItemRepository;
 
     public CartDto getCart(String guestId) {
 
@@ -67,6 +68,7 @@ public class CartService {
         return convertToDto(cart);
     }
 
+
     @Transactional
     public CartDto modifyProduct(String guestId, Integer productId, Integer quantity){
         //장바구니 찾기 없을시 예외발생
@@ -83,6 +85,17 @@ public class CartService {
         return convertToDto(cart);
 
 
+    }
+
+    @Transactional
+    public CartDto deleteProduct(String guestId, Integer productId) {
+        Cart cart = cartRepository.findByGuestId(guestId).
+                orElseThrow(()->new IllegalArgumentException("장바구니가 존재하지않습니다."));
+        CartItem targetItem=cart.getCartItemList().stream()
+                .filter(item->item.getProduct().getProductId()==productId)
+                .findFirst().orElseThrow(()->new IllegalArgumentException("장바구니에 해당 상품이 존재하지 않습니다."));
+        cart.getCartItemList().remove(targetItem);
+        return convertToDto(cart);
     }
 
 
@@ -105,5 +118,6 @@ public class CartService {
                 cart.getTotalAmount()
         );
     }
+
 
 }

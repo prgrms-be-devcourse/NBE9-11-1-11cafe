@@ -38,7 +38,17 @@ public class CartController {
             @Valid @RequestBody CartDto.UpdateQuantityReq req
     ){
         CartDto rst = cartService.modifyProduct(guestId,productId,req.quantity());
-        return RsData.of("장바구니 수정 성공", rst);
+        return RsData.of("장바구니 수정 성공.", rst);
+    }
+
+    //장바구니 상품 개별 삭제
+    @DeleteMapping("/products/{productId}")
+    public RsData<CartDto> deleteProduct(
+            @RequestHeader("X-Guest-Id") String guestId,
+            @PathVariable Integer productId
+    ){
+        CartDto rst = cartService.deleteProduct(guestId,productId);
+        return RsData.of("상품이 장바구니에서 삭제되었습니다.",rst);
     }
 
 }
