@@ -20,7 +20,6 @@ public class CartService {
         Cart cart = cartRepository.findByGuestId(guestId)
                 .orElseThrow(() -> new RuntimeException("장바구니가 없습니다.")); // 비어있을 시 500 에러.
 
-
         List<CartDto.CartItemDto> items = cart.getCartItemList().stream()
                 .map(item -> new CartDto.CartItemDto(
                         item.getCartItemId(),
@@ -67,6 +66,10 @@ public class CartService {
         return convertToDto(cart);
     }
 
+    public long count() {
+        return cartRepository.count();
+    }
+
     @Transactional
     public CartDto modifyProduct(String guestId, Integer productId, Integer quantity){
         //장바구니 찾기 없을시 예외발생
@@ -81,10 +84,7 @@ public class CartService {
         targetItem.modifyQuantity(quantity);
         //Dto리턴
         return convertToDto(cart);
-
-
     }
-
 
     //엔티티 및 DTO 매핑
     private CartDto convertToDto(Cart cart) {
@@ -105,5 +105,4 @@ public class CartService {
                 cart.getTotalAmount()
         );
     }
-
 }
