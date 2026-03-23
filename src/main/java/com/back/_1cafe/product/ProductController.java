@@ -24,13 +24,13 @@ public class ProductController {
          List<ProductDto> productDtoList = productService.getAllProducts().stream()
                                     .map(ProductDto::new)
                                     .toList();
-         return new RsData<>(true, "상품 목록 조회 성공", productDtoList);
+         return RsData.of("상품 목록 조회 성공", productDtoList);
     }
 
     @GetMapping("/{id}")
     public RsData<ProductDto> detail(@PathVariable("id") int productId){
         Product product = productService.getProduct(productId)
                 .orElseThrow(() -> new IllegalArgumentException("상품을 찾을 수 없습니다. id: " + productId));
-        return new RsData<>(true, "상품 조회 성공", new ProductDto(product));
+        return RsData.of("상품 조회 성공", new ProductDto(product));
     }
 }

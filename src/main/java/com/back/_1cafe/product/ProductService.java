@@ -18,7 +18,7 @@ public class ProductService {
     }
 
     //상세보기
-    public Optional<Product> getProduct(int postId){
-        return productRepository.findById(postId);
+    public Optional<Product> getProduct(int productId){
+        return productRepository.findById(productId);
     }
 }
