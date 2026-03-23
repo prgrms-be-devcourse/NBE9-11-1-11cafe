@@ -15,10 +15,12 @@ public record CartDto(
     // 요청 데이터를 받기 위한 내부 레코드
     public record Request(
             @NotNull(message = "상품 ID는 필수입니다.")
-            int productId,
-            @NotNull(message = "수량을 입력해주세요")
-            @Min(value = 1, message = "수량은 1개 이상이여 합니다.")
-            int quantity
+            @Min(value = 1, message = "상품 ID는 1 이상이어야 합니다.")
+            Integer productId,
+
+            @NotNull(message = "수량은 필수입니다.")
+            @Min(value = 1, message = "수량은 1 이상이어야 합니다.")
+            Integer quantity
     ) {}
 
     // 장바구니에 담긴 개별 상품 정보를 위한 내부 레코드
