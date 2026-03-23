@@ -16,7 +16,7 @@ public class GlobalExceptionHandler {
     public ResponseEntity<RsData<Void>> handleHttpMessageNotReadableException(HttpMessageNotReadableException e) {
         RsData<Void> rsData = RsData.fail("잘못된 데이터 형식입니다.");
         return ResponseEntity
-                .status(HttpStatus.BAD_REQUEST)
+                .status(HttpStatus.BAD_REQUEST) // 400 에러 코드로 반환
                 .body(rsData);
     }
 
