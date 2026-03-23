@@ -48,7 +48,7 @@ public class BaseInitData implements ApplicationRunner {
         CartDto.Request request1 = new CartDto.Request(product1.getProductId(), 3);
         CartDto.Request request2 = new CartDto.Request(product2.getProductId(), 5);
 
-        cartService.addProduct("사용자1", request1);
-        cartService.addProduct("사용자2", request2);
+        cartService.addProduct("user1", request1);
+        cartService.addProduct("user2", request2);
     }
 }
