@@ -98,6 +98,18 @@ public class CartService {
         return convertToDto(cart);
     }
 
+    //삭제구현
+    @Transactional
+    public CartDto deleteProduct(String guestId, Integer productId) {
+        Cart cart = cartRepository.findByGuestId(guestId).
+                orElseThrow(()->new IllegalArgumentException("장바구니가 존재하지않습니다."));
+        CartItem targetItem=cart.getCartItemList().stream()
+                .filter(item->item.getProduct().getProductId()==productId)
+                .findFirst().orElseThrow(()->new IllegalArgumentException("장바구니에 해당 상품이 존재하지 않습니다."));
+        cart.getCartItemList().remove(targetItem);
+        return convertToDto(cart);
+    }
+
     //엔티티 및 DTO 매핑
     private CartDto convertToDto(Cart cart) {
         List<CartDto.CartItemDto> itemDtos = cart.getCartItemList().stream()

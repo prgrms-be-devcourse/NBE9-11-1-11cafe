@@ -57,4 +57,14 @@ public class CartController {
 
         return RsData.of("장바구니가 비워졌습니다.", rst);
     }
+
+    //장바구니 상품 개별 삭제
+    @DeleteMapping("/products/{productId}")
+    public RsData<CartDto> deleteProduct(
+            @RequestHeader("X-Guest-Id") String guestId,
+            @PathVariable Integer productId
+    ){
+        CartDto rst = cartService.deleteProduct(guestId,productId);
+        return RsData.of("상품이 장바구니에서 삭제되었습니다.",rst);
+    }
 }
