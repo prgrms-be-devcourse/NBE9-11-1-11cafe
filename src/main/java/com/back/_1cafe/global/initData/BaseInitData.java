@@ -8,51 +8,45 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.boot.ApplicationArguments;
 import org.springframework.boot.ApplicationRunner;
 import org.springframework.context.annotation.Configuration;
-import org.springframework.context.annotation.Lazy;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.util.List;
 
-@Configuration
 @RequiredArgsConstructor
+@Configuration
 public class BaseInitData implements ApplicationRunner {
 
     private final ProductRepository productRepository;
     private final CartService cartService;
 
-    @Lazy
-    private final BaseInitData self;
-
     @Override
-    public void run(ApplicationArguments args) {
-        System.out.println("initData 호출 됨.");
-        self.work1();
+    public void run(ApplicationArguments args) throws Exception {
+        if (productRepository.count() == 0) {
+            productRepository.saveAll(List.of(
+                    new Product("Columbia",15000,"SINGLE_ORIGIN"),
+                    new Product("Ethiopia", 17000,"SINGLE_ORIGIN"),
+                    new Product("Brazil",13000, "BLENDED"),
+                    new Product("Kenya", 16000,  "SINGLE_ORIGIN")
+            ));
+        }
+
+        work1(); // 장바구니 초기 데이터값 세팅.
     }
 
     @Transactional
     public void work1() {
-
-        if (productRepository.count() == 0) {
-            productRepository.saveAll(List.of(
-                    new Product("Columbia", 15000, "SINGLE_ORIGIN"),
-                    new Product("Ethiopia", 17000, "SINGLE_ORIGIN"),
-                    new Product("Brazil", 13000, "BLENDED"),
-                    new Product("Kenya", 16000, "SINGLE_ORIGIN")
-            ));
-        }
-
         if (cartService.count() > 0) {
             return;
         }
 
-        List<Product> products = productRepository.findAll();
+        Product product1 = productRepository.findById(1)
+                .orElseThrow(() -> new IllegalArgumentException("상품1 없음"));
 
-        if (products.size() < 2) {
-            throw new IllegalStateException("상품 데이터 부족");
-        }
+        Product product2 = productRepository.findById(2)
+                .orElseThrow(() -> new IllegalArgumentException("상품2 없음"));
 
-        CartDto.Request request1 = new CartDto.Request(products.get(0).getProductId(), 3);
-        CartDto.Request request2 = new CartDto.Request(products.get(1).getProductId(), 5);
+        CartDto.Request request1 = new CartDto.Request(product1.getProductId(), 3);
+        CartDto.Request request2 = new CartDto.Request(product2.getProductId(), 5);
 
         cartService.addProduct("사용자1", request1);
         cartService.addProduct("사용자2", request2);
