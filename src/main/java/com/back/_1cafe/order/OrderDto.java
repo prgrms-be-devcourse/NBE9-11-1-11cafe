@@ -1,41 +1,28 @@
 package com.back._1cafe.order;
 
-import lombok.Getter;
-import lombok.Setter;
+import com.back._1cafe.customer.Customer;
 
-import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.util.List;
 
-public class OrderDto {
-
-    @Getter
-    @Setter
-    public static class CreateOrderRequest {
-        private String email;
-        private String address;
-        private String postcode;
-    }
-
-    @Getter
-    @Setter
-    public static class OrderItemResponse {
-        private Integer productId;
-        private String productName;
-        private Integer quantity;
-        private Integer price;
-    }
-
-    @Getter
-    @Setter
-    public static class CreateOrderResponse {
-        private Integer orderId;
-        private String email;
-        private Integer deliveryBatch;
-        private Integer totalAmount;
-        private String status;
-        private LocalDate deliveryDate;
-        private List<OrderItemResponse> orderItems;
-        private LocalDateTime createdAt;
+public record OrderDto(
+        Long id,
+        Customer customer,
+        LocalDateTime createdAt,
+        List<OrderItemDto> orderItems,
+        int batchId,
+        int totalPrice
+) {
+    public OrderDto(Orders orders) {
+        this(
+                orders.getId(),
+                orders.getCustomer(),
+                orders.getCreatedAt(),
+                orders.getOrderItems().stream()
+                        .map(OrderItemDto::new)
+                        .toList(),
+                orders.getDeliveryBatch(),
+                orders.getTotalPrice()
+        );
     }
 }
