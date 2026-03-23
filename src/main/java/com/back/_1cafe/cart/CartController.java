@@ -1,8 +1,8 @@
 package com.back._1cafe.cart;
 
 import com.back._1cafe.global.rsData.RsData;
-import jakarta.validation.Valid;
 import io.swagger.v3.oas.annotations.Operation;
+import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import org.springframework.web.bind.annotation.*;
 
@@ -25,11 +25,8 @@ public class CartController {
     public RsData<CartDto> addProduct(
             @RequestHeader("X-Guest-Id") String guestId,
             @Valid @RequestBody CartDto.Request request
-    )
-
-    {
+    ){
         CartDto rst=cartService.addProduct(guestId,request);
         return RsData.of("장바구니 추가 성공",rst);
     }
-
 }
