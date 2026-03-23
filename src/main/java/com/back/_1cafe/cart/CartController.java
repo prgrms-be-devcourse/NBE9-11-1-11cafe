@@ -2,6 +2,7 @@ package com.back._1cafe.cart;
 
 import com.back._1cafe.global.rsData.RsData;
 import io.swagger.v3.oas.annotations.Operation;
+import io.swagger.v3.oas.annotations.tags.Tag;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import org.springframework.web.bind.annotation.*;
@@ -9,6 +10,7 @@ import org.springframework.web.bind.annotation.*;
 @RestController
 @RequestMapping("/api/v1/carts")
 @RequiredArgsConstructor
+@Tag(name = "CartController", description = "장바구니 API")
 public class CartController {
     private final CartService cartService;
 
@@ -23,6 +25,7 @@ public class CartController {
 
     //카트에 상품추가
     @PostMapping
+    @Operation(summary = "장바구니 상품 추가")
     public RsData<CartDto> addProduct(
             @RequestHeader("X-Guest-Id") String guestId,
             @Valid @RequestBody CartDto.Request request
@@ -33,6 +36,7 @@ public class CartController {
 
     //장바구니 상품 수량변경
     @PutMapping("/products/{productId}")
+    @Operation(summary = "글 장바구니 상품 수량변경")
     public RsData<CartDto> modifyProduct(
             @RequestHeader("X-Guest-Id") String guestId,
             @PathVariable Integer productId,
@@ -60,6 +64,7 @@ public class CartController {
 
     //장바구니 상품 개별 삭제
     @DeleteMapping("/products/{productId}")
+    @Operation(summary = "장바구니 물품 삭제")
     public RsData<CartDto> deleteProduct(
             @RequestHeader("X-Guest-Id") String guestId,
             @PathVariable Integer productId
