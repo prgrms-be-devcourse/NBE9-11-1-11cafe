@@ -64,6 +64,7 @@ public class CartService {
                         // 없다면 새로 생성하여 리스트에 추가
                         () -> cart.getCartItemList().add(new CartItem(cart, product, request.quantity()))
                 );
+        cartRepository.flush();
         return convertToDto(cart);
     }
 
