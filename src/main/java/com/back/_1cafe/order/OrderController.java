@@ -1,6 +1,7 @@
 package com.back._1cafe.order;
 
 import com.back._1cafe.global.rsData.RsData;
+import io.swagger.v3.oas.annotations.tags.Tag;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import org.springframework.web.bind.annotation.*;
@@ -8,6 +9,7 @@ import org.springframework.web.bind.annotation.*;
 @RequestMapping("/api/v1")
 @RestController
 @RequiredArgsConstructor
+@Tag(name = "OrderController", description = "주문 API")
 public class OrderController {
 
     private final OrderService orderService;

@@ -8,6 +8,7 @@ import com.back._1cafe.customer.Customer;
 import com.back._1cafe.customer.CustomerRepository;
 import com.back._1cafe.global.exception.customExcetpion.CartItemNotFoundException;
 import com.back._1cafe.global.exception.customExcetpion.CartNotFoundException;
+import io.swagger.v3.oas.annotations.Operation;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -27,6 +28,7 @@ public class OrderService {
     private final CartService cartService;
 
     @Transactional
+    @Operation(summary = "주문하기")
     public Orders createOrder (String guestId,OrderRequestBody orderRequestBody) {
 
         // customer 객체 생성해서 저장
