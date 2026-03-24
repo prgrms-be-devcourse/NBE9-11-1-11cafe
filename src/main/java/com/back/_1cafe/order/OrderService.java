@@ -2,9 +2,11 @@ package com.back._1cafe.order;
 
 import com.back._1cafe.cart.Cart;
 import com.back._1cafe.cart.CartItem;
-import com.back._1cafe.cart.CartService;
+import com.back._1cafe.cart.CartRepository;
 import com.back._1cafe.customer.Customer;
 import com.back._1cafe.customer.CustomerRepository;
+import com.back._1cafe.global.exception.customExcetpion.CartItemNotFoundException;
+import com.back._1cafe.global.exception.customExcetpion.CartNotFoundException;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -20,46 +22,45 @@ public class OrderService {
 
     private final OrderRepository orderRepository;
     private final CustomerRepository customerRepository;
-    private final CartService cartService;
+    private final CartRepository cartRepository;
 
-    public Orders createOrder (OrderRequestBody orderRequestBody) {
+    @Transactional
+    public Orders createOrder (String guestId,OrderRequestBody orderRequestBody) {
 
         // customer 객체 생성해서 저장
         // 이 부분 논의 필요 - customer에는 email만 남기는게 어떨지?
-        Customer customer = new Customer(
-                orderRequestBody.email(),
-                orderRequestBody.address(),
-                orderRequestBody.postcode()
-        );
-        this.customerRepository.save(customer);
+        Customer customer = customerRepository.findByEmail(orderRequestBody.email())
+                .orElseGet(()->{
+                    Customer newCustomer=new Customer(orderRequestBody.email(), orderRequestBody.address(), orderRequestBody.postcode());
+                    return customerRepository.save(newCustomer);
+                });
 
-        // Cart 세팅
-        Cart cart = this.cartService.findCartByGuestId(orderRequestBody.guestId());
-        List<CartItem> cartItems = cart.getCartItems();
+        // Cart 세팅 및 예외처리
+       Cart cart =cartRepository.findByGuestId(guestId)
+               .orElseThrow(()->new CartNotFoundException("장바구니가 존재하지않습니다."));
+       List<CartItem> cartItems = cart.getCartItemList();
+       if(cartItems.isEmpty()){
+           throw new CartItemNotFoundException("장바구니가 비어있습니다.");
+       }
 
         // 주문 생성 및 연결
-        Orders orders = new Orders();
-        List<OrderItem> orderItems = orders.getOrderItems(); // 빈 배열
-        orders.setCustomer(customer);
+        Orders orders = new Orders(customer);
 
-        for (CartItem cartItem : cartItems) {
-            OrderItem orderItem = new OrderItem();
-            orderItem.setProduct(cartItem.getProduct());
-            orderItem.setQuantity(cartItem.getQuantity());
-            orderItem.setOrders(orders);
-            orderItems.add(orderItem);
+        for(CartItem cartItem:cartItems){
+            OrderItem orderItem = new OrderItem(cartItem.getProduct(), cartItem.getQuantity());
+            orders.addOrderItem(orderItem);
         }
-        orders.setOrderItems(orderItems);
 
         // Batch 계산
         int deliveryBatch = setDeliveryBatch(orders.getCreatedAt());
-        orders.setDeliveryBatch(deliveryBatch);
+        orders.assignDeliveryBatch(deliveryBatch);
 
         // Total Price 계산
         orders.calculateTotalPrice();
 
         // return orders
         orderRepository.save(orders);
+
         return orders;
     }
 

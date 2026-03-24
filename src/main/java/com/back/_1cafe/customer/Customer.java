@@ -2,11 +2,12 @@ package com.back._1cafe.customer;
 
 import jakarta.persistence.*;
 import lombok.Getter;
-import lombok.Setter;
+import lombok.NoArgsConstructor;
 
 @Entity
 @Table(name = "customers")
 @Getter
+@NoArgsConstructor
 public class Customer {
 
     @Id
@@ -21,4 +22,9 @@ public class Customer {
 
     @Column(nullable = false, length = 10)
     private String postcode;
+    public Customer(String email, String address, String postcode){
+        this.email=email;
+        this.address=address;
+        this.postcode=postcode;
+    }
 }
