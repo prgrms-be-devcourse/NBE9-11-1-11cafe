@@ -134,14 +134,13 @@ useEffect(() => {
 
             {error ? <div className="cart-error">{error}</div> : null}
 
-            {/* TEST */}
             <CartList
               items={products}
               mutating={mutating}
               onQuantityChange={(id) => handleAddProduct(id)}
-              onShowToast={setToast}
+              onShowToast={showToast}
             />
-            {/* ----- */}
+            
           </section>
           
           <aside className="cart-right">
