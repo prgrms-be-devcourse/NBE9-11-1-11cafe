@@ -27,7 +27,7 @@ public class Orders {
     @Column(nullable = false, length = 255)
     private String address;
 
-    @Column(nullable = false, length = 10)
+    @Column(nullable = false, length = 5)
     private String postcode;
 
 
