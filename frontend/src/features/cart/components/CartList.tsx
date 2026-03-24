@@ -5,12 +5,17 @@ type Props = {
   items: CartItem[]
   mutating: boolean
   onQuantityChange: (id: string, nextQuantity: number) => void
+  onShowToast: (toast: {
+    message: string
+    type: 'success' | 'error'
+  } | null) => void
 }
 
 export function CartList({
   items,
   mutating,
   onQuantityChange,
+  onShowToast,
 }: Props) {
   return (
     <div className="cart-list" role="list">
@@ -21,6 +26,7 @@ export function CartList({
           onQuantityChange={(nextQuantity) =>
             onQuantityChange(item.id, nextQuantity)
           }
+          onShowToast={onShowToast}
         />
       ))}
 

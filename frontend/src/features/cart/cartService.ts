@@ -76,3 +76,14 @@ export async function clearCart(): Promise<void> {
   cart = []
 }
 
+export async function addCartItem(item: CartItem): Promise<CartItem[]> {
+  await delay(0)
+
+  const exists = cart.find((cartItem) => cartItem.id === item.id)
+  if (exists) {
+    return cloneItems(cart)
+  }
+
+  cart = [...cart, { ...item, quantity: 1 }]
+  return cloneItems(cart)
+}

@@ -1,4 +1,4 @@
-import { useMemo, useState } from 'react'
+import { useEffect, useState } from 'react'
 import { CartList } from '../../features/cart/components/CartList'
 import { CartTotals } from '../../features/cart/components/CartTotals'
 import { useCart } from '../../features/cart/hooks/useCart'
@@ -12,6 +12,7 @@ export function CartPage() {
     mutating,
     error,
     refresh,
+    addOne,
     changeQuantity,
     deleteOne,
     deleteAll,
@@ -20,8 +21,76 @@ export function CartPage() {
   const [email, setEmail] = useState('')
   const [address, setAddress] = useState('')
   const [postalCode, setPostalCode] = useState('')
+  const [toast, setToast] = useState<{
+    message: string
+    type: 'success' | 'error'
+  } | null>(null)
 
-  const isEmpty = useMemo(() => !loading && items.length === 0, [loading, items])
+  const productItems = [
+    {
+      id: 'columbia',
+      productName: 'Columbia',
+      productType: 'SINGLE_ORIGIN' as const,
+      price: 15000,
+      quantity: items.find((item) => item.id === 'columbia')?.quantity ?? 0,
+      imageSrc: '/coffeeicon.png',
+    },
+    {
+      id: 'ethiopia',
+      productName: 'Ethiopia',
+      productType: 'SINGLE_ORIGIN' as const,
+      price: 17000,
+      quantity: items.find((item) => item.id === 'ethiopia')?.quantity ?? 0,
+      imageSrc: '/coffeeicon.png',
+    },
+    {
+      id: 'brazil',
+      productName: 'Brazil',
+      productType: 'BLENDED' as const,
+      price: 13000,
+      quantity: items.find((item) => item.id === 'brazil')?.quantity ?? 0,
+      imageSrc: '/coffeeicon.png',
+    },
+    {
+      id: 'kenya',
+      productName: 'Kenya',
+      productType: 'SINGLE_ORIGIN' as const,
+      price: 16000,
+      quantity: items.find((item) => item.id === 'kenya')?.quantity ?? 0,
+      imageSrc: '/coffeeicon.png',
+    },
+  ]
+
+  const handleAddProduct = (id: string) => {
+    const product = productItems.find((item) => item.id === id)
+    if (!product) return
+
+    addOne(product)
+  }
+
+  useEffect(() => {
+    if (!toast) return
+
+    const timer = setTimeout(() => {
+      setToast(null)
+    }, 2000)
+
+    return () => clearTimeout(timer)
+  }, [toast])
+
+  const showToast = (nextToast: {
+    message: string
+    type: 'success' | 'error'
+  } | null) => {
+    setToast(null)
+
+    if (!nextToast) return
+
+    setTimeout(() => {
+      setToast(nextToast)
+    }, 0)
+  }
+
   const canCheckout =
     items.length > 0 &&
     !mutating &&
@@ -29,36 +98,45 @@ export function CartPage() {
     address.trim().length > 0 &&
     postalCode.trim().length > 0
 
-    return (
-      <div className="cart-outer">
-        <div className="cart-shell">
-          <h1 className="cart-title">
-            <span className="cart-brand">11cafe</span>
-            <span className="cart-subtitle">커피 원두 주문</span>
-          </h1>
-    
-          <div className="cart-grid">
+  return (
+    <div className="cart-outer">
+      {toast && (
+        <div
+          className={`cart-toast ${toast.type === 'success' ? 'cart-toast-success' : 'cart-toast-error'
+            }`}
+        >
+          {toast.message}
+        </div>
+      )}
+
+      <div className="cart-shell">
+        <h1 className="cart-title">
+          <span className="cart-brand">11cafe</span>
+          <span className="cart-subtitle">커피 원두 주문</span>
+        </h1>
+
+        <div className="cart-grid">
           <section className="cart-left">
             <div className="cart-left-header">
               <h2 className="cart-left-title">상품 목록</h2>
             </div>
 
             {error ? <div className="cart-error">{error}</div> : null}
-            {loading ? <div className="cart-loading">목록을 불러오는 중...</div> : null}
-            {isEmpty ? <div className="cart-empty-state">장바구니가 비어 있어요.</div> : null}
 
-            {!loading && items.length > 0 ? (
-              <CartList
-                items={items}
-                mutating={mutating}
-                onQuantityChange={changeQuantity}
-              />
-            ) : null}
+            <CartList
+              items={productItems}
+              mutating={mutating}
+              onQuantityChange={(id) => handleAddProduct(id)}
+              onShowToast={showToast}
+            />
           </section>
 
           <aside className="cart-right">
             <div className="cart-right-inner">
               <h2 className="cart-right-title">Summary</h2>
+
+              {loading ? <div className="cart-loading">장바구니를 불러오는 중...</div> : null}
+
               <CartTotals
                 items={items}
                 totals={totals}
@@ -107,7 +185,6 @@ export function CartPage() {
                   className="cart-checkout-btn"
                   disabled={!canCheckout}
                   onClick={() => {
-                    // 학습용: 결제 로직은 아직 연결하지 않습니다.
                     refresh()
                   }}
                 >
@@ -121,4 +198,3 @@ export function CartPage() {
     </div>
   )
 }
-
