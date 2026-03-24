@@ -3,6 +3,7 @@ package com.back._1cafe.order;
 import com.back._1cafe.cart.Cart;
 import com.back._1cafe.cart.CartItem;
 import com.back._1cafe.cart.CartRepository;
+import com.back._1cafe.cart.CartService;
 import com.back._1cafe.customer.Customer;
 import com.back._1cafe.customer.CustomerRepository;
 import com.back._1cafe.global.exception.customExcetpion.CartItemNotFoundException;
@@ -23,6 +24,7 @@ public class OrderService {
     private final OrderRepository orderRepository;
     private final CustomerRepository customerRepository;
     private final CartRepository cartRepository;
+    private final CartService cartService;
 
     @Transactional
     public Orders createOrder (String guestId,OrderRequestBody orderRequestBody) {
@@ -60,7 +62,7 @@ public class OrderService {
 
         // return orders
         orderRepository.save(orders);
-
+        cartService.clearCart(guestId);
         return orders;
     }
 
