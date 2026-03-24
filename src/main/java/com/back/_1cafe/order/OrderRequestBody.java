@@ -5,10 +5,10 @@ import jakarta.validation.constraints.NotBlank;
 import jakarta.validation.constraints.NotEmpty;
 import jakarta.validation.constraints.Size;
 
+/*
+원래 GusetId를 Body로 받던것을 Head로 받도록 수정, 바디에 있던 내용 삭제
+ */
 record OrderRequestBody(
-        @NotBlank(message = "guestId는 필수입니다.")
-        String guestId,
-
         @NotBlank(message = "이메일은 필수입니다.")
         @Email(message = "이메일 형식에 맞게 입력해주세요.")
         String email,
