@@ -43,8 +43,15 @@ export function CartTotals({
               <button
                 type="button"
                 className="cart-summary-qty-btn"
-                onClick={() => onQuantityChange(item.id, item.quantity - 1)}
-                disabled={mutating || item.quantity <= 1}
+                onClick={() => {
+                  if (item.quantity === 1) {
+                    onRemove(item.id)
+                    return
+                  }
+
+                  onQuantityChange(item.id, item.quantity - 1)
+                }}
+                disabled={mutating}
                 aria-label="수량 감소"
               >
                 -
