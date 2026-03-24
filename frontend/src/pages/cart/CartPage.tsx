@@ -26,43 +26,20 @@ export function CartPage() {
     type: 'success' | 'error'
   } | null>(null)
 
-  const productItems = [
+  //Test
+  const [products, setProducts] = useState<
     {
-      id: 'columbia',
-      productName: 'Columbia',
-      productType: 'SINGLE_ORIGIN' as const,
-      price: 15000,
-      quantity: items.find((item) => item.id === 'columbia')?.quantity ?? 0,
-      imageSrc: '/coffeeicon.png',
-    },
-    {
-      id: 'ethiopia',
-      productName: 'Ethiopia',
-      productType: 'SINGLE_ORIGIN' as const,
-      price: 17000,
-      quantity: items.find((item) => item.id === 'ethiopia')?.quantity ?? 0,
-      imageSrc: '/coffeeicon.png',
-    },
-    {
-      id: 'brazil',
-      productName: 'Brazil',
-      productType: 'BLENDED' as const,
-      price: 13000,
-      quantity: items.find((item) => item.id === 'brazil')?.quantity ?? 0,
-      imageSrc: '/coffeeicon.png',
-    },
-    {
-      id: 'kenya',
-      productName: 'Kenya',
-      productType: 'SINGLE_ORIGIN' as const,
-      price: 16000,
-      quantity: items.find((item) => item.id === 'kenya')?.quantity ?? 0,
-      imageSrc: '/coffeeicon.png',
-    },
-  ]
+      id: string
+      productName: string
+      productType: 'SINGLE_ORIGIN' | 'BLENDED'
+      price: number
+      quantity: number
+      imageSrc: string
+    }[]
+  >([])
 
   const handleAddProduct = (id: string) => {
-    const product = productItems.find((item) => item.id === id)
+    const product = products.find((item) => item.id === id)
     if (!product) return
 
     addOne(product)
@@ -77,6 +54,40 @@ export function CartPage() {
 
     return () => clearTimeout(timer)
   }, [toast])
+
+// Test
+useEffect(() => {
+  fetch('/api/v1/products')
+    .then((res) => {
+      console.log('products status:', res.status)
+      return res.json()
+    })
+    .then((result) => {
+      console.log('products result:', result)
+
+      const mappedProducts = result.data.map((product: any) => {
+        const cartItem = items.find(
+          (item) => item.productName === product.productName,
+        )
+
+        return {
+          id: product.productId.toString(),
+          productName: product.productName,
+          productType: product.description,
+          price: product.price,
+          quantity: cartItem?.quantity ?? 0,
+          imageSrc: '/coffeeicon.png',
+        }
+      })
+
+      console.log('mappedProducts:', mappedProducts)
+      setProducts(mappedProducts)
+    })
+    .catch((err) => {
+      console.error('products error:', err)
+    })
+}, [items])
+//--------
 
   const showToast = (nextToast: {
     message: string
@@ -123,14 +134,16 @@ export function CartPage() {
 
             {error ? <div className="cart-error">{error}</div> : null}
 
+            {/* TEST */}
             <CartList
-              items={productItems}
+              items={products}
               mutating={mutating}
               onQuantityChange={(id) => handleAddProduct(id)}
-              onShowToast={showToast}
+              onShowToast={setToast}
             />
+            {/* ----- */}
           </section>
-
+          
           <aside className="cart-right">
             <div className="cart-right-inner">
               <h2 className="cart-right-title">Summary</h2>
