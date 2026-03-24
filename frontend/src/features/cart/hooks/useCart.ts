@@ -1,6 +1,7 @@
 import { useCallback, useEffect, useMemo, useState } from 'react'
 import type { CartItem, CartTotals } from '../cartTypes'
 import {
+  addCartItem,
   clearCart,
   deleteCartItem,
   fetchCartItems,
@@ -57,6 +58,19 @@ export function useCart() {
     [],
   )
 
+  const addOne = useCallback(async (item: CartItem) => {
+    setMutating(true)
+    setError(null)
+    try {
+      const next = await addCartItem(item)
+      setItems(next)
+    } catch (e) {
+      setError(e instanceof Error ? e.message : '추가 실패')
+    } finally {
+      setMutating(false)
+    }
+  }, [])
+
   const deleteOne = useCallback(async (id: string) => {
     setMutating(true)
     setError(null)
@@ -91,6 +105,7 @@ export function useCart() {
     error,
     refresh,
     changeQuantity,
+    addOne,
     deleteOne,
     deleteAll,
   }
