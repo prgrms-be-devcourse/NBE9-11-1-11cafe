@@ -33,7 +33,7 @@ public class OrderService {
         // 이 부분 논의 필요 - customer에는 email만 남기는게 어떨지?
         Customer customer = customerRepository.findByEmail(orderRequestBody.email())
                 .orElseGet(()->{
-                    Customer newCustomer=new Customer(orderRequestBody.email(), orderRequestBody.address(), orderRequestBody.postcode());
+                    Customer newCustomer=new Customer(orderRequestBody.email());
                     return customerRepository.save(newCustomer);
                 });
 
@@ -46,7 +46,12 @@ public class OrderService {
        }
 
         // 주문 생성 및 연결
-        Orders orders = new Orders(customer);
+        Orders orders = new Orders(
+                customer,
+                orderRequestBody.address(),
+                orderRequestBody.postcode()
+        );
+
 
         for(CartItem cartItem:cartItems){
             OrderItem orderItem = new OrderItem(cartItem.getProduct(), cartItem.getQuantity());

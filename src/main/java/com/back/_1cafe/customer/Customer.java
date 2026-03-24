@@ -17,14 +17,7 @@ public class Customer {
     @Column(nullable = false, unique = true, length = 100)
     private String email;
 
-    @Column(nullable = false, length = 255)
-    private String address;
-
-    @Column(nullable = false, length = 10)
-    private String postcode;
-    public Customer(String email, String address, String postcode){
-        this.email=email;
-        this.address=address;
-        this.postcode=postcode;
-    }
+   public Customer(String email){
+       this.email=email;
+   }
 }

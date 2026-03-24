@@ -23,6 +23,13 @@ public class Orders {
     @ManyToOne(fetch = FetchType.LAZY)
     private Customer customer;
 
+    @Column(nullable = false, length = 255)
+    private String address;
+
+    @Column(nullable = false, length = 10)
+    private String postcode;
+
+
     private LocalDateTime createdAt = LocalDateTime.now();
 
     @OneToMany(mappedBy = "orders", cascade = CascadeType.ALL)
@@ -33,8 +40,10 @@ public class Orders {
     private int totalPrice;
 
     // 고객 정보 받아서 새로운 주문하는 생성자
-    public Orders(Customer customer){
+    public Orders(Customer customer,String address, String postcode){
         this.customer=customer;
+        this.address=address;
+        this.postcode=postcode;
     }
     //주문상품을 추가하고 연관관계 맺는 메서드
     public void addOrderItem(OrderItem orderItem){
