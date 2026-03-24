@@ -109,6 +109,53 @@ useEffect(() => {
     address.trim().length > 0 &&
     postalCode.trim().length > 0
 
+    const handleCheckout = async () => {
+      try {
+        const response = await fetch('/api/v1/orders', {
+          method: 'POST',
+          headers: {
+            'Content-Type': 'application/json',
+            'X-Guest-id': localStorage.getItem('guestId') || 'guest-1',
+          },
+          body: JSON.stringify({
+            email,
+            address,
+            postcode: postalCode,
+          }),
+        })
+    
+        const result = await response.json()
+    
+        console.log('order result:', result)
+    
+        if (!response.ok || !result.data) {
+          throw new Error(result.message || '주문 실패')
+        }
+    
+        // 장바구니 전체 삭제
+        await deleteAll()
+    
+        await refresh()
+    
+        setEmail('')
+        setAddress('')
+        setPostalCode('')
+    
+        showToast({
+          message: '주문이 완료되었습니다!',
+          type: 'success',
+        })
+    
+      } catch (err: any) {
+        console.error('order error:', err)
+    
+        showToast({
+          message: err.message || '주문 중 오류 발생',
+          type: 'error',
+        })
+      }
+    }
+
   return (
     <div className="cart-outer">
       {toast && (
@@ -196,9 +243,7 @@ useEffect(() => {
                   type="button"
                   className="cart-checkout-btn"
                   disabled={!canCheckout}
-                  onClick={() => {
-                    refresh()
-                  }}
+                  onClick={handleCheckout}
                 >
                   결제하기
                 </button>
