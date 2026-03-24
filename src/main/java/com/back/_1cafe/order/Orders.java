@@ -18,7 +18,8 @@ public class Orders {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private Long id;
+    @Column(name = "order_id")
+    private Integer id;
 
     @ManyToOne(fetch = FetchType.LAZY)
     private Customer customer;

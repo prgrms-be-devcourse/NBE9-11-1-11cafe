@@ -13,7 +13,8 @@ public class OrderItem {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private Long id;
+    @Column(name = "order_item_id")
+    private Integer id;
 
     @ManyToOne(fetch = FetchType.LAZY)
     private Product product;
