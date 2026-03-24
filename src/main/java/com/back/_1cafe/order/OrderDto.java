@@ -7,7 +7,7 @@ import java.util.List;
 OrderDot에 필요한 내용만 넘기도록 수정
  */
 public record OrderDto(
-        Long orderId,
+        Integer orderId,
         String email,
         String address,
         String postcode,
