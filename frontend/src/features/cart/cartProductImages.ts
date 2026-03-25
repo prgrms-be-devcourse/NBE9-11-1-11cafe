@@ -44,33 +44,8 @@ function coffeeCardSvg({
 }
 
 export const productImageSrcByName: Record<string, string> = {
-  Columbia: toDataUri(
-    coffeeCardSvg({
-      title: 'Columbia',
-      bg1: '#5B8FFF',
-      bg2: '#AA3BFF',
-    }),
-  ),
-  Ethiopia: toDataUri(
-    coffeeCardSvg({
-      title: 'Ethiopia',
-      bg1: '#2DD4BF',
-      bg2: '#5B8FFF',
-    }),
-  ),
-  Brazil: toDataUri(
-    coffeeCardSvg({
-      title: 'Brazil',
-      bg1: '#F97316',
-      bg2: '#F43F5E',
-    }),
-  ),
-  Kenya: toDataUri(
-    coffeeCardSvg({
-      title: 'Kenya',
-      bg1: '#22C55E',
-      bg2: '#14B8A6',
-    }),
-  ),
+  Columbia: '/columbia.png',
+  Ethiopia: '/ethiopia.png',
+  Brazil: '/brazil.png',
+  Kenya: '/kenya.png',
 }
-
