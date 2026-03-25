@@ -22,7 +22,17 @@ public class CartService {
     public CartDto getCart(String guestId) {
 
         Cart cart = cartRepository.findByGuestId(guestId)
-                .orElseThrow(() -> new CartNotFoundException("장바구니가 존재하지않습니다."));
+                .orElse(null);
+
+        // 장바구니 없으면 빈 값으로 처리.
+        if (cart == null) {
+            return new CartDto(
+                    0,
+                    guestId,
+                    List.of(),
+                    0
+            );
+        }
 
         List<CartDto.CartItemDto> items = cart.getCartItemList().stream()
                 .map(item -> new CartDto.CartItemDto(
