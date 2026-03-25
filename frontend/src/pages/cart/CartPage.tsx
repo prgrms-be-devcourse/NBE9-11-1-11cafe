@@ -2,6 +2,7 @@ import { useEffect, useState } from 'react'
 import { CartList } from '../../features/cart/components/CartList'
 import { CartTotals } from '../../features/cart/components/CartTotals'
 import { useCart } from '../../features/cart/hooks/useCart'
+import { resolveGuestId } from '../../features/cart/cartService'
 import './cartPage.css'
 
 export function CartPage() {
@@ -110,12 +111,15 @@ useEffect(() => {
     postalCode.trim().length > 0
 
     const handleCheckout = async () => {
+      const guestId = resolveGuestId()
+      console.log('주문 요청 guestId:', guestId)
+
       try {
         const response = await fetch('/api/v1/orders', {
           method: 'POST',
           headers: {
             'Content-Type': 'application/json',
-            'X-Guest-id': localStorage.getItem('guestId') || 'guest-1',
+            'X-Guest-Id': guestId,
           },
           body: JSON.stringify({
             email,
