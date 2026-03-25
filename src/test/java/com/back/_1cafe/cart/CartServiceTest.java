@@ -50,20 +50,15 @@ public class CartServiceTest {
         // Given
         String guestId = "user123";
 
-        // Repository가 빈 Optional을 반환하도록 설정
         given(cartRepository.findByGuestId(guestId)).willReturn(Optional.empty());
 
         // When
         CartDto result = cartService.getCart(guestId);
 
         // Then
-        // 1. 결과가 null이 아니어야 함
         Assertions.assertThat(result).isNotNull();
-        // 2. 해당 사용자의 guestId를 가지고 있어야 함
         Assertions.assertThat(result.guestId()).isEqualTo(guestId);
-        // 3. 상품 목록(items)은 비어 있어야 함 (빈 배열 반환 검증)
         Assertions.assertThat(result.cartItems()).isEmpty();
-        // 4. 총 금액은 0원이어야 함
         Assertions.assertThat(result.totalAmount()).isEqualTo(0);
     }
     @Test
