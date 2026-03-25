@@ -21,17 +21,16 @@ type CartResponse = {
   }
 }
 
-function resolveGuestId() {
-  const envGuestId = String(import.meta.env.VITE_GUEST_ID ?? '').trim()
-  if (envGuestId) return envGuestId
+const GUEST_ID_STORAGE_KEY = 'guestId'
+const DEFAULT_GUEST_ID = 'user-100'
 
-  const storageKey = 'guestId'
-  const savedGuestId = localStorage.getItem(storageKey)?.trim()
-  if (savedGuestId) return savedGuestId
 
-  const generatedGuestId = crypto.randomUUID()
-  localStorage.setItem(storageKey, generatedGuestId)
-  return generatedGuestId
+export function resolveGuestId() {
+  const saved = localStorage.getItem(GUEST_ID_STORAGE_KEY)?.trim()
+  if (saved) return saved
+
+  localStorage.setItem(GUEST_ID_STORAGE_KEY, DEFAULT_GUEST_ID)
+  return DEFAULT_GUEST_ID
 }
 
 function mapCartItem(item: CartItemResponse): CartItem {
@@ -47,6 +46,7 @@ function mapCartItem(item: CartItemResponse): CartItem {
 
 export async function fetchCartItems(): Promise<CartItem[]> {
   const guestId = resolveGuestId()
+  
 
   const response = await fetch(
     `${import.meta.env.VITE_API_BASE_URL}/api/v1/carts`,
@@ -58,11 +58,14 @@ export async function fetchCartItems(): Promise<CartItem[]> {
     }
   )
 
+  console.log("response: " + response)
+
   if (!response.ok) {
     throw new Error('장바구니 조회 실패')
   }
 
   const result: CartResponse = await response.json()
+  console.log("result 출력: " + result);
 
   if (!result.success) {
     throw new Error(result.message || '장바구니 조회 실패')
