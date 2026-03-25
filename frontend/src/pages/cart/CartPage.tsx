@@ -3,6 +3,8 @@ import { CartList } from '../../features/cart/components/CartList'
 import { CartTotals } from '../../features/cart/components/CartTotals'
 import { useCart } from '../../features/cart/hooks/useCart'
 import { resolveGuestId } from '../../features/cart/cartService'
+import { productImageSrcByName } from '../../features/cart/cartProductImages'
+
 import './cartPage.css'
 
 export function CartPage() {
@@ -70,14 +72,14 @@ useEffect(() => {
         const cartItem = items.find(
           (item) => item.productName === product.productName,
         )
-
+      
         return {
           id: product.productId.toString(),
           productName: product.productName,
           productType: product.description,
           price: product.price,
           quantity: cartItem?.quantity ?? 0,
-          imageSrc: '/coffeeicon.png',
+          imageSrc: productImageSrcByName[product.productName] ?? '/coffeeicon.png',
         }
       })
 

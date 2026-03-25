@@ -74,14 +74,10 @@ public class OrderService {
 
     // "우리는 매일 전날 오후 2시부터 당일 오후 2시까지의 주문을 모아서 처리합니다."
     public int setDeliveryBatch(LocalDateTime orderTime) {
-        // 현재 시간에서 14시간을 뒤로 미는 방법
-        // 예: 20일 13시 -> 19일 23시 (19일자 배치)
-        // 예: 20일 15시 -> 20일 01시 (20일자 배치)
-        LocalDateTime referenceTime = orderTime.minusHours(14);
+        // if orderTime의 시간이 14시 이전이면 deliveryBatch = 오늘 날짜를 포맷에 맞게 리턴
+        // if orderTime의 시간이 14시 이후라면 orderTime의 yyyymmdd를 가져와서 하루 추가한다음에 deliveryBatch로 리턴
+        LocalDateTime targetTime = (orderTime.getHour() < 14) ? orderTime : orderTime.plusDays(1);
 
-        // 날짜 포맷팅 (20260320 형태)
-        String deliveryBatch = referenceTime.format(DateTimeFormatter.ofPattern("yyyyMMdd"));
-
-        return Integer.parseInt(deliveryBatch);
+        return Integer.parseInt(targetTime.format(DateTimeFormatter.ofPattern("yyyyMMdd")));
     }
 }

@@ -91,11 +91,11 @@ public class OrderServiceUnitTest {
         // 1. 오후 2시 이전 (예: 2026-03-24 13:59) -> 전날인 20260323 배치여야 함
         LocalDateTime morning = LocalDateTime.of(2026, 3, 24, 13, 59);
         int morningBatch = orderService.setDeliveryBatch(morning);
-        assertThat(morningBatch).isEqualTo(20260323);
+        assertThat(morningBatch).isEqualTo(20260324);
 
         // 2. 오후 2시 이후 (예: 2026-03-24 14:01) -> 당일인 20260324 배치여야 함
         LocalDateTime afternoon = LocalDateTime.of(2026, 3, 24, 14, 1);
         int afternoonBatch = orderService.setDeliveryBatch(afternoon);
-        assertThat(afternoonBatch).isEqualTo(20260324);
+        assertThat(afternoonBatch).isEqualTo(20260325);
     }
 }
