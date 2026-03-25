@@ -76,7 +76,6 @@ public class CartControllerTest {
                 .andExpect(status().isBadRequest())
                 .andExpect(jsonPath("$.success").value(false));
     }
-
     @Test
     @DisplayName("잘못된 JSON 형식이면 실패")
     void t3() throws Exception {
