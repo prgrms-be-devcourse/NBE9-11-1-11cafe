@@ -64,7 +64,10 @@ public class OrderServiceIntegrationTest {
         assertThat(clearedCart.get().getCartItemList()).isEmpty();
 
         // deliveryBatch 잘 들어갔는지 확인
-        assertThat(savedOrder.getDeliveryBatch())
-                .isEqualTo(Integer.parseInt(referenceTime.minusHours(14).format(DateTimeFormatter.ofPattern("yyyyMMdd"))));
+        int expectedBatch = (referenceTime.getHour() < 14)
+                ? Integer.parseInt(referenceTime.format(DateTimeFormatter.ofPattern("yyyyMMdd")))
+                : Integer.parseInt(referenceTime.plusDays(1).format(DateTimeFormatter.ofPattern("yyyyMMdd")));
+
+        assertThat(savedOrder.getDeliveryBatch()).isEqualTo(expectedBatch);
     }
 }
